@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">SMSFilter</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">SMSFilter</string>
+    <string name="tab_sms_list">Blocked</string>
+    <string name="tab_filter_list">Filters</string>
+
+</resources>
