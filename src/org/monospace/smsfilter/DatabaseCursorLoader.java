@@ -3,8 +3,6 @@ package org.monospace.smsfilter;
 import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.database.Cursor;
-import android.os.CancellationSignal;
-import android.os.OperationCanceledException;
 
 /**
  * SMSFilter
@@ -19,7 +17,6 @@ public class DatabaseCursorLoader extends AsyncTaskLoader<Cursor> {
 	String mOrderBy;
 	DatabaseHelper mDatabaseHelper;
 	Cursor mCursor;
-	CancellationSignal mCancellationSignal;
 
 	public DatabaseCursorLoader(Context context, String table, String[] columns, String selection,
 	                    String[] selectionArgs, String orderBy) {
@@ -35,36 +32,13 @@ public class DatabaseCursorLoader extends AsyncTaskLoader<Cursor> {
 	/* Runs on a worker thread */
 	@Override
 	public Cursor loadInBackground() {
-		synchronized (this) {
-			if (isLoadInBackgroundCanceled()) {
-				throw new OperationCanceledException();
-			}
-			mCancellationSignal = new CancellationSignal();
-		}
-		try {
-			Cursor cursor = mDatabaseHelper.getWritableDatabase().query(false, mTable, mColumns, mSelection, mSelectionArgs, null, null, mOrderBy, null, mCancellationSignal);
-			if (cursor != null) {
-				// Ensure the cursor window is filled
-				cursor.getCount();
-				cursor.registerContentObserver(mObserver);
-			}
-			return cursor;
-		} finally {
-			synchronized (this) {
-				mCancellationSignal = null;
-			}
-		}
-	}
-
-	@Override
-	public void cancelLoadInBackground() {
-		super.cancelLoadInBackground();
-
-		synchronized (this) {
-			if (mCancellationSignal != null) {
-				mCancellationSignal.cancel();
-			}
-		}
+        Cursor cursor = mDatabaseHelper.getWritableDatabase().query(false, mTable, mColumns, mSelection, mSelectionArgs, null, null, mOrderBy, null);
+        if (cursor != null) {
+            // Ensure the cursor window is filled
+            cursor.getCount();
+            cursor.registerContentObserver(mObserver);
+        }
+        return cursor;
 	}
 
 	/* Runs on the UI thread */
