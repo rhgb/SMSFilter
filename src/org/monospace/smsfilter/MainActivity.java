@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 
 public class MainActivity extends Activity {
 	
@@ -58,6 +59,7 @@ public class MainActivity extends Activity {
 
 	private static final String TAB_SMS = "tab_sms_list";
 	private static final String TAB_FILTER = "tab_filter_list";
+	private BroadcastReceiver mReceiver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -81,14 +83,21 @@ public class MainActivity extends Activity {
 				.setTabListener(new TabListener<>(
 						this, TAB_FILTER, FilterListFragment.class));
 		actionBar.addTab(tab);
-
-		registerReceiver(new BroadcastReceiver() {
+		mReceiver = new BroadcastReceiver() {
 			@Override
 			public void onReceive(Context context, Intent intent) {
 				SMSListFragment fragment = (SMSListFragment) getFragmentManager().findFragmentByTag(TAB_SMS);
 				fragment.refresh();
 			}
-		}, new IntentFilter("org.monospace.smsfilter.NEW_BLOCKED_SMS"));
+		};
+
+		registerReceiver(mReceiver, new IntentFilter("org.monospace.smsfilter.NEW_BLOCKED_SMS"));
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		unregisterReceiver(mReceiver);
 	}
 
 	@Override
@@ -96,5 +105,10 @@ public class MainActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
+	}
+
+	public void settings(MenuItem item) {
+		Intent intent = new Intent(this, SettingsActivity.class);
+		startActivity(intent);
 	}
 }

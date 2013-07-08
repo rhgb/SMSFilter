@@ -6,5 +6,13 @@
     <string name="title_activity_main">SMSFilter</string>
     <string name="tab_sms_list">Blocked</string>
     <string name="tab_filter_list">Filters</string>
+	<string name="pref_filter_enabled">Enable filter</string>
+	<string name="pref_cat_general">General Settings</string>
+	<string name="pref_filter_enabled_enable">ON</string>
+	<string name="pref_filter_enabled_disable">OFF</string>
+	<string name="pref_cat_actions">Actions</string>
+	<string name="pref_clear_sms">Clear all stored messages</string>
+	<string name="pref_clear_sms_message">Confirm clear all messages? This cannot be restored.</string>
+	<string name="title_activity_settings">Settings</string>
 
 </resources>

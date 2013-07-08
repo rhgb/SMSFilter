@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+	<PreferenceCategory
+		android:title="@string/pref_cat_general"
+	    android:key="pref_cat_general"
+	    >
+		<SwitchPreference
+			android:key="pref_filter_enabled"
+		    android:title="@string/pref_filter_enabled"
+		    android:switchTextOn="@string/pref_filter_enabled_enable"
+		    android:switchTextOff="@string/pref_filter_enabled_disable"
+		    android:defaultValue="true"
+		    />
+	</PreferenceCategory>
+	<PreferenceCategory
+		android:title="@string/pref_cat_actions"
+	    android:key="pref_cat_actions"
+	    >
+		<Preference
+			android:title="@string/pref_clear_sms"
+		    android:key="pref_clear_sms"
+		    />
+	</PreferenceCategory>
+
+</PreferenceScreen>
