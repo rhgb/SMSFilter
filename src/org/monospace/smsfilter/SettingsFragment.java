@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -29,14 +30,11 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 				.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						//To change body of implemented methods use File | Settings | File Templates.
+						getActivity().getContentResolver().delete(
+								Uri.withAppendedPath(DatabaseProvider.CONTENT_URI, DatabaseHelper.TABLE_SMS),
+								null, null);
 					}
-				}).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						//To change body of implemented methods use File | Settings | File Templates.
-					}
-				});
+				}).setNegativeButton(android.R.string.cancel, null);
 				AlertDialog dialog = builder.create();
 				dialog.show();
 				return true;
