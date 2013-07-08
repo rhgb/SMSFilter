@@ -1,12 +1,16 @@
 package org.monospace.smsfilter;
 
-import android.os.Bundle;
+import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Bundle;
 import android.view.Menu;
-import android.app.ActionBar;
 
 public class MainActivity extends Activity {
 	
@@ -51,30 +55,40 @@ public class MainActivity extends Activity {
 	        // User selected the already selected tab. Usually do nothing.
 	    }
 	}
-	
+
+	private static final String TAB_SMS = "tab_sms_list";
+	private static final String TAB_FILTER = "tab_filter_list";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		
 	    super.onCreate(savedInstanceState);
 	    // Notice that setContentView() is not used, because we use the root
 	    // android.R.id.content as the container for each fragment
+		// setup action bar for tabs
+		ActionBar actionBar = getActionBar();
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		actionBar.setDisplayShowTitleEnabled(false);
 
-	    // setup action bar for tabs
-	    ActionBar actionBar = getActionBar();
-	    actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-	    actionBar.setDisplayShowTitleEnabled(false);
+		Tab tab = actionBar.newTab()
+				.setText(R.string.tab_sms_list)
+				.setTabListener(new TabListener<>(
+						this, TAB_SMS, SMSListFragment.class));
+		actionBar.addTab(tab);
 
-	    Tab tab = actionBar.newTab()
-	            .setText(R.string.tab_sms_list)
-	            .setTabListener(new TabListener<>(
-	                    this, "tab_sms_list", SMSListFragment.class));
-	    actionBar.addTab(tab);
+		tab = actionBar.newTab()
+				.setText(R.string.tab_filter_list)
+				.setTabListener(new TabListener<>(
+						this, TAB_FILTER, FilterListFragment.class));
+		actionBar.addTab(tab);
 
-	    tab = actionBar.newTab()
-	        .setText(R.string.tab_filter_list)
-	        .setTabListener(new TabListener<>(
-	                this, "tab_filter_list", FilterListFragment.class));
-	    actionBar.addTab(tab);
+		registerReceiver(new BroadcastReceiver() {
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				SMSListFragment fragment = (SMSListFragment) getFragmentManager().findFragmentByTag(TAB_SMS);
+				fragment.refresh();
+			}
+		}, new IntentFilter("org.monospace.smsfilter.NEW_BLOCKED_SMS"));
 	}
 
 	@Override

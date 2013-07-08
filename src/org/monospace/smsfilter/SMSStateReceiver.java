@@ -1,9 +1,6 @@
 package org.monospace.smsfilter;
 
-import android.content.BroadcastReceiver;
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.Intent;
+import android.content.*;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -35,6 +32,10 @@ public class SMSStateReceiver extends BroadcastReceiver {
 				smsValues.put(DatabaseHelper.COL_SMS_RECV_TIME, sms.getTimestampMillis());
 				smsValues.put(DatabaseHelper.COL_SMS_STATE, 0);
 				db.insert(DatabaseHelper.TABLE_SMS, null, smsValues);
+
+				Intent newBlocked = new Intent("org.monospace.smsfilter.NEW_BLOCKED_SMS");
+				newBlocked.setPackage("org.monospace.smsfilter");
+				context.sendBroadcast(newBlocked);
 			}
 		} else {
 			Log.w("smsreceiver", "Something else received");
