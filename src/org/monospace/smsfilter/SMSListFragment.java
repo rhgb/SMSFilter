@@ -2,8 +2,10 @@ package org.monospace.smsfilter;
 
 import android.app.ListFragment;
 import android.app.LoaderManager;
+import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.SimpleCursorAdapter;
 
@@ -38,9 +40,9 @@ public class SMSListFragment extends ListFragment implements LoaderManager.Loade
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
-		return new DatabaseCursorLoader(getActivity(),
-				DatabaseHelper.TABLE_SMS,
-				new String[]{"id AS _id", DatabaseHelper.COL_SMS_SENDER, DatabaseHelper.COL_SMS_CONTENT},
+		return new CursorLoader(getActivity(),
+				Uri.withAppendedPath(DatabaseProvider.CONTENT_URI, DatabaseHelper.TABLE_SMS),
+				new String[]{DatabaseHelper.COL_ID, DatabaseHelper.COL_SMS_SENDER, DatabaseHelper.COL_SMS_CONTENT},
 				null,
 				null,
 				DatabaseHelper.COL_SMS_RECV_TIME+" ASC");

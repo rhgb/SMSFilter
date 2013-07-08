@@ -19,7 +19,7 @@ public class SMSStateReceiver extends BroadcastReceiver {
 			Log.i("smsreceiver", "Messages received l=" + messages.length);
 
 			SQLiteDatabase db = dbHelper.getWritableDatabase();
-			String query = "SELECT id FROM "+DatabaseHelper.TABLE_FILTER +" WHERE ("+DatabaseHelper.COL_FIL_TARGET +"='address') AND (? LIKE "+DatabaseHelper.COL_FIL_RULE+");";
+			String query = "SELECT "+DatabaseHelper.COL_ID+" FROM "+DatabaseHelper.TABLE_FILTER +" WHERE ("+DatabaseHelper.COL_FIL_TARGET +"='address') AND (? LIKE "+DatabaseHelper.COL_FIL_RULE+");";
 			SmsMessage sms = SmsMessage.createFromPdu((byte[]) messages[0]);
 			String[] initAddr = { sms.getOriginatingAddress() };
 			Cursor res = db.rawQuery(query, initAddr);

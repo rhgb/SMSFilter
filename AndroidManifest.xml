@@ -31,8 +31,13 @@
         </activity>
 
 	    <activity android:name=".SettingsActivity"
-	              android:label="@string/title_activity_settings">
-	              </activity>
+            android:label="@string/title_activity_settings">
+        </activity>
+
+        <provider android:authorities="org.monospace.smsfilter.provider"
+            android:name=".DatabaseProvider"
+            android:permission="signature"
+            />
         
         <receiver android:name="org.monospace.smsfilter.SMSStateReceiver" >
             <intent-filter android:priority="2147483647" >
