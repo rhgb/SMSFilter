@@ -24,9 +24,9 @@ public class DatabaseProvider extends ContentProvider {
 
 	private class UriParser {
 		private boolean generated;
-		private Uri mUri;
+		private final Uri mUri;
 		private int mMatch;
-		private String mSelection;
+		private final String mSelection;
 		private String mTable;
 		private String mSelGen;
 
@@ -49,24 +49,24 @@ public class DatabaseProvider extends ContentProvider {
 			mMatch = sMatcher.match(mUri);
 			switch (mMatch) {
 				case URI_PATTERN.SMS_LIST:
-					mTable = DatabaseHelper.TABLE_SMS;
+					mTable = DbVars.TABLE_SMS;
 					mSelGen = mSelection;
 					break;
 				case URI_PATTERN.SMS_ROW:
-					mTable = DatabaseHelper.TABLE_SMS;
+					mTable = DbVars.TABLE_SMS;
 					mSelGen = mSelection.isEmpty() ?
-							DatabaseHelper.COL_ID + "=" + mUri.getLastPathSegment() :
-							mSelection + " AND " + DatabaseHelper.COL_ID + "=" + mUri.getLastPathSegment();
+							DbVars.COL_ID + "=" + mUri.getLastPathSegment() :
+							mSelection + " AND " + DbVars.COL_ID + "=" + mUri.getLastPathSegment();
 					break;
 				case URI_PATTERN.FILTER_LIST:
-					mTable = DatabaseHelper.TABLE_FILTER;
+					mTable = DbVars.TABLE_FILTER;
 					mSelGen = mSelection;
 					break;
 				case URI_PATTERN.FILTER_ROW:
-					mTable = DatabaseHelper.TABLE_FILTER;
+					mTable = DbVars.TABLE_FILTER;
 					mSelGen = mSelection.isEmpty() ?
-							DatabaseHelper.COL_ID + "=" + mUri.getLastPathSegment() :
-							mSelection + " AND " + DatabaseHelper.COL_ID + "=" + mUri.getLastPathSegment();
+							DbVars.COL_ID + "=" + mUri.getLastPathSegment() :
+							mSelection + " AND " + DbVars.COL_ID + "=" + mUri.getLastPathSegment();
 					break;
 				default:
 					throw new IllegalArgumentException();
@@ -100,10 +100,10 @@ public class DatabaseProvider extends ContentProvider {
 	private static final UriMatcher sMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
 	static {
-		sMatcher.addURI(AUTHORITY, DatabaseHelper.TABLE_SMS, URI_PATTERN.SMS_LIST);
-		sMatcher.addURI(AUTHORITY, DatabaseHelper.TABLE_SMS + "/#", URI_PATTERN.SMS_ROW);
-		sMatcher.addURI(AUTHORITY, DatabaseHelper.TABLE_FILTER, URI_PATTERN.FILTER_LIST);
-		sMatcher.addURI(AUTHORITY, DatabaseHelper.TABLE_FILTER + "/#", URI_PATTERN.FILTER_ROW);
+		sMatcher.addURI(AUTHORITY, DbVars.TABLE_SMS, URI_PATTERN.SMS_LIST);
+		sMatcher.addURI(AUTHORITY, DbVars.TABLE_SMS + "/#", URI_PATTERN.SMS_ROW);
+		sMatcher.addURI(AUTHORITY, DbVars.TABLE_FILTER, URI_PATTERN.FILTER_LIST);
+		sMatcher.addURI(AUTHORITY, DbVars.TABLE_FILTER + "/#", URI_PATTERN.FILTER_ROW);
 	}
 
 	public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY);

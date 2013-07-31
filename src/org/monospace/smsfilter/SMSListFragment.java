@@ -21,7 +21,7 @@ public class SMSListFragment extends ListFragment implements LoaderManager.Loade
 				getActivity(),
 				R.layout.sms_list_item,
 				null,
-				new String[]{DatabaseHelper.COL_SMS_SENDER, DatabaseHelper.COL_SMS_CONTENT},
+				new String[]{DbVars.COL_SMS_SENDER, DbVars.COL_SMS_CONTENT},
 				new int[]{R.id.sms_sender, R.id.sms_content},
 				0
 		);
@@ -41,11 +41,11 @@ public class SMSListFragment extends ListFragment implements LoaderManager.Loade
 	@Override
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
 		return new CursorLoader(getActivity(),
-				Uri.withAppendedPath(DatabaseProvider.CONTENT_URI, DatabaseHelper.TABLE_SMS),
-				new String[]{DatabaseHelper.COL_ID, DatabaseHelper.COL_SMS_SENDER, DatabaseHelper.COL_SMS_CONTENT},
+				Uri.withAppendedPath(DatabaseProvider.CONTENT_URI, DbVars.TABLE_SMS),
+				new String[]{DbVars.COL_ID, DbVars.COL_SMS_SENDER, DbVars.COL_SMS_CONTENT},
 				null,
 				null,
-				DatabaseHelper.COL_SMS_RECV_TIME+" ASC");
+				DbVars.COL_SMS_RECV_TIME+" ASC");
 	}
 
 	@Override

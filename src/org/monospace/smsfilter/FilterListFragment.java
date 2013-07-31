@@ -30,7 +30,7 @@ public class FilterListFragment extends ListFragment implements LoaderManager.Lo
 				getActivity(),
 				R.layout.filter_list_item,
 				null,
-				new String[]{DatabaseHelper.COL_FIL_RULE, DatabaseHelper.COL_FIL_TARGET, DatabaseHelper.COL_FIL_DESC},
+				new String[]{DbVars.COL_FIL_RULE, DbVars.COL_FIL_TARGET, DbVars.COL_FIL_DESC},
 				new int[]{R.id.filter_rule, R.id.filter_type, R.id.filter_desc},
 				0
 		);
@@ -40,13 +40,6 @@ public class FilterListFragment extends ListFragment implements LoaderManager.Lo
 		lv.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
 		lv.setMultiChoiceModeListener(this);
 		getLoaderManager().initLoader(0, null, this);
-	}
-	/* (non-Javadoc)
-	 * @see android.app.Fragment#onCreate(android.os.Bundle)
-	 */
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 	}
 
 	/* (non-Javadoc)
@@ -61,11 +54,11 @@ public class FilterListFragment extends ListFragment implements LoaderManager.Lo
 	@Override
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
 		return new CursorLoader(getActivity(),
-				Uri.withAppendedPath(DatabaseProvider.CONTENT_URI, DatabaseHelper.TABLE_FILTER),
-				new String[]{DatabaseHelper.COL_ID, DatabaseHelper.COL_FIL_RULE, DatabaseHelper.COL_FIL_TARGET, DatabaseHelper.COL_FIL_DESC},
+				Uri.withAppendedPath(DatabaseProvider.CONTENT_URI, DbVars.TABLE_FILTER),
+				new String[]{DbVars.COL_ID, DbVars.COL_FIL_RULE, DbVars.COL_FIL_TARGET, DbVars.COL_FIL_DESC},
 				null,
 				null,
-				DatabaseHelper.COL_ID +" ASC");
+				DbVars.COL_ID +" ASC");
 	}
 
 	@Override
@@ -137,8 +130,8 @@ public class FilterListFragment extends ListFragment implements LoaderManager.Lo
 			idlist = idlist + "," + String.valueOf(ids[i]);
 		}
 		getActivity().getContentResolver().delete(
-				Uri.withAppendedPath(DatabaseProvider.CONTENT_URI, DatabaseHelper.TABLE_FILTER),
-				DatabaseHelper.COL_ID + " IN (" + idlist + ")",
+				Uri.withAppendedPath(DatabaseProvider.CONTENT_URI, DbVars.TABLE_FILTER),
+				DbVars.COL_ID + " IN (" + idlist + ")",
 				null);
 		getLoaderManager().restartLoader(0, null, this);
 	}

@@ -17,97 +17,9 @@ import android.widget.*;
  * Author: rhgb
  */
 public class EditFilterDialogFragment extends DialogFragment implements AdapterView.OnItemSelectedListener, TextWatcher {
-	public enum FilterType {
-		ADDR_START_WITH(0, FilterType.TARGET_ADDR, FilterType.TYPE_START_WITH),
-		ADDR_CONTAINS(1, FilterType.TARGET_ADDR, FilterType.TYPE_CONTAINS),
-		ADDR_END_WITH(2, FilterType.TARGET_ADDR, FilterType.TYPE_END_WITH),
-		CONTENT_CONTAINS(3, FilterType.TARGET_CONTENT, FilterType.TYPE_CONTAINS),
-		ADDR_RAW(4, FilterType.TARGET_ADDR, FilterType.TYPE_RAW),
-		CONTENT_RAW(5, FilterType.TARGET_CONTENT, FilterType.TYPE_RAW);
-
-		private final int index;
-		private final String target;
-		private final String type;
-
-		public static final String TARGET_ADDR = "address";
-		public static final String TARGET_CONTENT = "content";
-		public static final String TYPE_START_WITH = "start_with";
-		public static final String TYPE_END_WITH = "end_with";
-		public static final String TYPE_CONTAINS = "contains";
-		public static final String TYPE_RAW = "raw";
-
-		private FilterType(int i, String tar, String type) {
-			this.index = i;
-			this.target = tar;
-			this.type = type;
-		}
-
-		public static FilterType get(int i) {
-			for (FilterType t : values()) {
-				if (i == t.index) return t;
-			}
-			return null;
-		}
-
-		public String getTarget() {
-			return target;
-		}
-
-		public String getType() {
-			return type;
-		}
-
-		public String applyContent(String src) {
-			switch (this) {
-				case ADDR_RAW:
-				case CONTENT_RAW:
-					return src;
-				case ADDR_START_WITH:
-					return src + "%";
-				case ADDR_END_WITH:
-					return "%" + src;
-				case ADDR_CONTAINS:
-				case CONTENT_CONTAINS:
-					return "%" + src + "%";
-			}
-			return src;
-		}
-	}
-
-	public enum FilterState {
-		BLOCK(0, "block"),
-		PERMIT(1, "permit");
-
-		private final int index;
-		private final String key;
-
-		private FilterState(int i, String k) {
-			this.index = i;
-			this.key = k;
-		}
-
-		public static FilterState get(int i) {
-			for (FilterState s : values()) {
-				if (i == s.index) return s;
-			}
-			return null;
-		}
-
-		public static FilterState get(String key) {
-			for (FilterState s : values()) {
-				if (key.equals(s.key)) return s;
-			}
-			return null;
-		}
-
-		@Override
-		public String toString() {
-			return key;
-		}
-	}
 
 	public interface DialogListener {
-		public void onDialogPositiveClick(FilterType type, FilterState state, String content);
+		public void onDialogPositiveClick(DbVars.FilterType type, DbVars.FilterState state, String content);
 	}
 
 	private Spinner mFilterSpinner;
@@ -126,8 +38,8 @@ public class EditFilterDialogFragment extends DialogFragment implements AdapterV
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						if (mListener != null) {
-							mListener.onDialogPositiveClick(FilterType.get((int) mFilterSpinner.getSelectedItemId()),
-									FilterState.get((int) mStateSpinner.getSelectedItemId()),
+							mListener.onDialogPositiveClick(DbVars.FilterType.get((int) mFilterSpinner.getSelectedItemId()),
+									DbVars.FilterState.get((int) mStateSpinner.getSelectedItemId()),
 									mEditText.getText().toString());
 						}
 					}
@@ -161,18 +73,13 @@ public class EditFilterDialogFragment extends DialogFragment implements AdapterV
 	}
 
 	@Override
-	public void onViewCreated(View view, Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-	}
-
-	@Override
 	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-		FilterType type = FilterType.get((int)id);
+		DbVars.FilterType type = DbVars.FilterType.get((int)id);
 		switch (type.getTarget()) {
-			case FilterType.TARGET_ADDR:
+			case DbVars.FilterType.TARGET_ADDR:
 				mEditText.setInputType(InputType.TYPE_CLASS_PHONE);
 				break;
-			case FilterType.TARGET_CONTENT:
+			case DbVars.FilterType.TARGET_CONTENT:
 				mEditText.setInputType(InputType.TYPE_CLASS_TEXT);
 				break;
 		}

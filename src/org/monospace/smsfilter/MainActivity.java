@@ -123,13 +123,13 @@ public class MainActivity extends Activity implements EditFilterDialogFragment.D
 	}
 
 	@Override
-	public void onDialogPositiveClick(EditFilterDialogFragment.FilterType type, EditFilterDialogFragment.FilterState state, String content) {
+	public void onDialogPositiveClick(DbVars.FilterType type, DbVars.FilterState state, String content) {
 		ContentValues values = new ContentValues(4);
-		values.put(DatabaseHelper.COL_FIL_TARGET, type.getTarget());
-		values.put(DatabaseHelper.COL_FIL_TYPE, type.getType());
-		values.put(DatabaseHelper.COL_FIL_RULE, type.applyContent(content));
-		values.put(DatabaseHelper.COL_FIL_STATE, state.toString());
-		getContentResolver().insert(Uri.withAppendedPath(DatabaseProvider.CONTENT_URI, DatabaseHelper.TABLE_FILTER), values);
+		values.put(DbVars.COL_FIL_TARGET, type.getTarget());
+		values.put(DbVars.COL_FIL_TYPE, type.getType());
+		values.put(DbVars.COL_FIL_RULE, type.applyContent(content));
+		values.put(DbVars.COL_FIL_STATE, state.toString());
+		getContentResolver().insert(Uri.withAppendedPath(DatabaseProvider.CONTENT_URI, DbVars.TABLE_FILTER), values);
 		FilterListFragment fragment = (FilterListFragment) getFragmentManager().findFragmentByTag(TAB_FILTER);
 		if (fragment != null) {
 			fragment.getLoaderManager().restartLoader(0, null, fragment);

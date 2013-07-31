@@ -31,7 +31,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						getActivity().getContentResolver().delete(
-								Uri.withAppendedPath(DatabaseProvider.CONTENT_URI, DatabaseHelper.TABLE_SMS),
+								Uri.withAppendedPath(DatabaseProvider.CONTENT_URI, DbVars.TABLE_SMS),
 								null, null);
 					}
 				}).setNegativeButton(android.R.string.cancel, null);
