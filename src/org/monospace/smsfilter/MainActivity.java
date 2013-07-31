@@ -5,16 +5,14 @@ import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.*;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends Activity {
-	
+public class MainActivity extends Activity implements EditFilterDialogFragment.DialogListener {
+
 	private static class TabListener<T extends Fragment> implements ActionBar.TabListener {
 	    private Fragment mFragment;
 	    private final Activity mActivity;
@@ -114,13 +112,27 @@ public class MainActivity extends Activity {
 				Intent intent = new Intent(this, SettingsActivity.class);
 				startActivity(intent);
 				return true;
+			case R.id.menu_add:
+				EditFilterDialogFragment dialog = new EditFilterDialogFragment();
+				dialog.setDialogListener(this);
+				dialog.show(getFragmentManager(), "EditFilterDialogFragment");
+				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
 	}
 
-	public void settings(MenuItem item) {
-		Intent intent = new Intent(this, SettingsActivity.class);
-		startActivity(intent);
+	@Override
+	public void onDialogPositiveClick(EditFilterDialogFragment.FilterType type, EditFilterDialogFragment.FilterState state, String content) {
+		ContentValues values = new ContentValues(4);
+		values.put(DatabaseHelper.COL_FIL_TARGET, type.getTarget());
+		values.put(DatabaseHelper.COL_FIL_TYPE, type.getType());
+		values.put(DatabaseHelper.COL_FIL_RULE, type.applyContent(content));
+		values.put(DatabaseHelper.COL_FIL_STATE, state.toString());
+		getContentResolver().insert(Uri.withAppendedPath(DatabaseProvider.CONTENT_URI, DatabaseHelper.TABLE_FILTER), values);
+		FilterListFragment fragment = (FilterListFragment) getFragmentManager().findFragmentByTag(TAB_FILTER);
+		if (fragment != null) {
+			fragment.getLoaderManager().restartLoader(0, null, fragment);
+		}
 	}
 }

@@ -7,6 +7,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.widget.AbsListView;
 import android.widget.SimpleCursorAdapter;
 
 public class FilterListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -27,6 +28,7 @@ public class FilterListFragment extends ListFragment implements LoaderManager.Lo
 		);
 		setListAdapter(mAdapter);
 		setListShown(false);
+		getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
 		getLoaderManager().initLoader(0, null, this);
 	}
 	/* (non-Javadoc)
@@ -41,8 +43,9 @@ public class FilterListFragment extends ListFragment implements LoaderManager.Lo
 	 * @see android.app.Fragment#onPause()
 	 */
 	@Override
-	public void onPause() {
-		super.onPause();
+	public void onResume() {
+		super.onResume();
+		getLoaderManager().restartLoader(0, null, this);
 	}
 
 	@Override

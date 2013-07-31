@@ -8,6 +8,8 @@ import android.telephony.SmsMessage;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.util.Locale;
+
 public class SMSStateReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		String MSG_TYPE = intent.getAction();
@@ -19,11 +21,41 @@ public class SMSStateReceiver extends BroadcastReceiver {
 			Log.i("smsreceiver", "Messages received l=" + messages.length);
 
 			SQLiteDatabase db = dbHelper.getWritableDatabase();
-			String query = "SELECT "+DatabaseHelper.COL_ID+" FROM "+DatabaseHelper.TABLE_FILTER +" WHERE ("+DatabaseHelper.COL_FIL_TARGET +"='address') AND (? LIKE "+DatabaseHelper.COL_FIL_RULE+");";
+
+			// query filter
 			SmsMessage sms = SmsMessage.createFromPdu((byte[]) messages[0]);
-			String[] initAddr = { sms.getOriginatingAddress() };
-			Cursor res = db.rawQuery(query, initAddr);
-			if (res.getCount() != 0) {
+
+			String blockSelection = String.format(Locale.US,
+					"(%s = ?) AND (((%s = ?) AND (? LIKE %s)) OR ((%s = ?) AND (? LIKE %s)))",
+					DatabaseHelper.COL_FIL_STATE,
+					DatabaseHelper.COL_FIL_TARGET,
+					DatabaseHelper.COL_FIL_RULE,
+					DatabaseHelper.COL_FIL_TARGET,
+					DatabaseHelper.COL_FIL_RULE);
+
+			Cursor permitQuery = db.query(DatabaseHelper.TABLE_FILTER,
+					new String[]{ DatabaseHelper.COL_FIL_STATE },
+					blockSelection,
+					new String[] {
+							EditFilterDialogFragment.FilterState.PERMIT.toString(),
+							EditFilterDialogFragment.FilterType.TARGET_ADDR,
+							sms.getOriginatingAddress(),
+							EditFilterDialogFragment.FilterType.TARGET_CONTENT,
+							sms.getMessageBody()
+					}, null, null, null);
+			if (permitQuery.getCount() != 0) return;
+
+			Cursor blockQuery = db.query(DatabaseHelper.TABLE_FILTER,
+					new String[]{ DatabaseHelper.COL_FIL_STATE },
+					blockSelection,
+					new String[] {
+							EditFilterDialogFragment.FilterState.BLOCK.toString(),
+							EditFilterDialogFragment.FilterType.TARGET_ADDR,
+							sms.getOriginatingAddress(),
+							EditFilterDialogFragment.FilterType.TARGET_CONTENT,
+							sms.getMessageBody()
+					}, null, null, null);
+			if (blockQuery.getCount() != 0) {
 				abortBroadcast();
 				Toast.makeText(context, "Message blocked", Toast.LENGTH_SHORT).show();
 				ContentValues smsValues = new ContentValues();
