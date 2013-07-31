@@ -35,8 +35,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 								null, null);
 					}
 				}).setNegativeButton(android.R.string.cancel, null);
-				AlertDialog dialog = builder.create();
-				dialog.show();
+				builder.show();
 				return true;
 			}
 		});
