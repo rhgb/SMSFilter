@@ -8,6 +8,7 @@ import android.app.FragmentTransaction;
 import android.content.*;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -24,10 +25,11 @@ public class MainActivity extends Activity implements EditFilterDialogFragment.D
 	      * @param tag  The identifier tag for the fragment
 	      * @param clz  The fragment's Class, used to instantiate the fragment
 	      */
-	    public TabListener(Activity activity, String tag, Class<T> clz) {
+	    public TabListener(Activity activity, String tag, Class<T> clz, Fragment fragment) {
 	        mActivity = activity;
 	        mTag = tag;
 	        mClass = clz;
+			mFragment = fragment;
 	    }
 	    
 	    @Override
@@ -61,26 +63,28 @@ public class MainActivity extends Activity implements EditFilterDialogFragment.D
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		
 	    super.onCreate(savedInstanceState);
-	    // Notice that setContentView() is not used, because we use the root
-	    // android.R.id.content as the container for each fragment
-		// setup action bar for tabs
 		ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		actionBar.setDisplayShowTitleEnabled(false);
 
+		Fragment fragment = getFragmentManager().findFragmentByTag(TAB_SMS);
 		Tab tab = actionBar.newTab()
 				.setText(R.string.tab_sms_list)
 				.setTabListener(new TabListener<>(
-						this, TAB_SMS, SMSListFragment.class));
+						this, TAB_SMS, SMSListFragment.class, fragment));
 		actionBar.addTab(tab);
 
+		fragment = getFragmentManager().findFragmentByTag(TAB_FILTER);
 		tab = actionBar.newTab()
 				.setText(R.string.tab_filter_list)
 				.setTabListener(new TabListener<>(
-						this, TAB_FILTER, FilterListFragment.class));
+						this, TAB_FILTER, FilterListFragment.class, fragment));
 		actionBar.addTab(tab);
+		if (fragment != null) {
+			tab.select();
+		}
+
 		mReceiver = new BroadcastReceiver() {
 			@Override
 			public void onReceive(Context context, Intent intent) {
