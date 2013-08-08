@@ -8,7 +8,6 @@ import android.app.FragmentTransaction;
 import android.content.*;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -127,12 +126,13 @@ public class MainActivity extends Activity implements EditFilterDialogFragment.D
 	}
 
 	@Override
-	public void onDialogPositiveClick(DbVars.FilterType type, DbVars.FilterState state, String content) {
+	public void onDialogPositiveClick(DbVars.FilterType type, DbVars.FilterState state, String rule, String desc) {
 		ContentValues values = new ContentValues(4);
 		values.put(DbVars.COL_FIL_TARGET, type.getTarget());
 		values.put(DbVars.COL_FIL_TYPE, type.getType());
-		values.put(DbVars.COL_FIL_RULE, type.applyContent(content));
+		values.put(DbVars.COL_FIL_RULE, type.applyContent(rule));
 		values.put(DbVars.COL_FIL_STATE, state.toString());
+		values.put(DbVars.COL_FIL_DESC, desc);
 		getContentResolver().insert(Uri.withAppendedPath(DatabaseProvider.CONTENT_URI, DbVars.TABLE_FILTER), values);
 		FilterListFragment fragment = (FilterListFragment) getFragmentManager().findFragmentByTag(TAB_FILTER);
 		if (fragment != null) {

@@ -31,6 +31,7 @@
 	<string name="msg_addr_precluded">%d filters created</string>
 	<string name="filter_state_permit">Permit</string>
 	<string name="filter_state_block">Block</string>
+	<string name="filter_desc_edit_hint">Filter description</string>
 
 	<string-array name="filter_type">
 		<item>Address starts with</item>
@@ -39,6 +40,15 @@
 		<item>Content contains</item>
 		<item>Address raw</item>
 		<item>Content raw</item>
+	</string-array>
+
+	<string-array name="filter_desc">
+		<item>Address starts w/ %s</item>
+		<item>Address contains %s</item>
+		<item>Address ends w/ %s</item>
+		<item>Content contains %s</item>
+		<item>Address is %s</item>
+		<item>Content is %s</item>
 	</string-array>
 
 	<string-array name="filter_state">
