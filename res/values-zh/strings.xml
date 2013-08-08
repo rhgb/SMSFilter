@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">短信过滤器</string>
+
+    <string name="title_activity_main">短信过滤器</string>
+	<string name="title_activity_settings">设置</string>
+	<string name="title_add_filter">添加过滤规则</string>
+
+    <string name="tab_sms_list">已屏蔽短信</string>
+    <string name="tab_filter_list">过滤规则</string>
+
+	<string name="pref_filter_enabled">启用过滤</string>
+	<string name="pref_cat_general">常规设置</string>
+	<string name="pref_filter_enabled_enable">启用</string>
+	<string name="pref_filter_enabled_disable">禁用</string>
+	<string name="pref_cat_actions">操作</string>
+	<string name="pref_clear_sms">删除所有已屏蔽短信</string>
+	<string name="pref_clear_sms_message">确认删除所有已屏蔽短信？该操作无法恢复。</string>
+
+	<string name="menu_add">添加过滤规则</string>
+	<string name="menu_settings">设置</string>
+
+	<string name="desc_add_filter">选择过滤方式和内容</string>
+	<string name="filter_content_edit_hint">要过滤的内容</string>
+	<string name="action_mode_title_filter">已选择%d个</string>
+	<string name="action_mode_title_sms">已选择%d个</string>
+	<string name="action_delete_filters">删除%d条过滤规则</string>
+	<string name="action_preclude_addr">将%d条短信的发信人加入白名单</string>
+	<string name="action_delete_sms">删除%d条短信</string>
+	<string name="msg_addr_precluded">创建了%d条过滤规则</string>
+	<string name="filter_state_permit">放行</string>
+	<string name="filter_state_block">屏蔽</string>
+	<string name="filter_desc_edit_hint">对这条规则的描述</string>
+    <string name="msg_sms_blocked">一条新短信已屏蔽</string>
+
+    <string-array name="filter_type">
+		<item>短信号码开头</item>
+		<item>短信号码包含</item>
+		<item>短信号码结尾</item>
+		<item>短信内容包含</item>
+		<item>短信号码（自定义格式）</item>
+		<item>短信内容（自定义格式）</item>
+	</string-array>
+
+	<string-array name="filter_desc">
+		<item>以%s开头的号码</item>
+		<item>包含%s的号码</item>
+		<item>以%s结束的号码</item>
+		<item>内容包含“%s”</item>
+		<item>自定义号码：%s</item>
+		<item>自定义内容：%s</item>
+	</string-array>
+
+	<string-array name="filter_state">
+		<item>屏蔽</item>
+		<item>允许</item>
+	</string-array>
+
+</resources>

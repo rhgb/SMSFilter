@@ -60,7 +60,7 @@ public class SMSStateReceiver extends BroadcastReceiver {
 					}, null, null, null);
 			if (blockQuery.getCount() != 0) {
 				abortBroadcast();
-				Toast.makeText(context, "Message blocked", Toast.LENGTH_SHORT).show();
+				Toast.makeText(context, R.string.msg_sms_blocked, Toast.LENGTH_SHORT).show();
 				ContentValues smsValues = new ContentValues();
 				smsValues.put(DbVars.COL_SMS_SENDER, sms.getOriginatingAddress());
 				smsValues.put(DbVars.COL_SMS_CONTENT, sms.getMessageBody());
