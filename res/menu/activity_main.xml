@@ -5,7 +5,7 @@
 	    android:orderInCategory="10"
 	    android:showAsAction="ifRoom"
 	    android:title="@string/menu_add"
-	    android:icon="@android:drawable/ic_menu_add"
+	    android:icon="@drawable/icon_new"
 	    />
     <item
         android:id="@+id/menu_settings"

@@ -5,5 +5,5 @@
 			android:id="@+id/menu_delete_filter"
 			android:orderInCategory="10"
 			android:showAsAction="always"
-			android:icon="@android:drawable/ic_menu_delete"/>
+			android:icon="@drawable/icon_delete"/>
 </menu>

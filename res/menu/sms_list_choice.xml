@@ -5,11 +5,11 @@
 			android:id="@+id/menu_preclude_addr"
 			android:orderInCategory="10"
 			android:showAsAction="ifRoom"
-			android:icon="@android:drawable/ic_menu_set_as"
+			android:icon="@drawable/icon_unlock"
 			android:title="@string/action_preclude_addr"/>
 	<item
 			android:id="@+id/menu_delete_sms"
 			android:orderInCategory="20"
 			android:showAsAction="always"
-			android:icon="@android:drawable/ic_menu_delete"/>
+			android:icon="@drawable/icon_delete"/>
 </menu>
