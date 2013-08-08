@@ -43,7 +43,10 @@ public class SMSStateReceiver extends BroadcastReceiver {
 							DbVars.FilterType.TARGET_CONTENT,
 							sms.getMessageBody()
 					}, null, null, null);
-			if (permitQuery.getCount() != 0) return;
+			if (permitQuery.getCount() != 0) {
+				permitQuery.close();
+				return;
+			}
 
 			Cursor blockQuery = db.query(DbVars.TABLE_FILTER,
 					new String[]{DbVars.COL_FIL_STATE},
@@ -69,6 +72,8 @@ public class SMSStateReceiver extends BroadcastReceiver {
 				newBlocked.setPackage("org.monospace.smsfilter");
 				context.sendBroadcast(newBlocked);
 			}
+			permitQuery.close();
+			blockQuery.close();
 		} else {
 			Log.w("smsreceiver", "Something else received");
 		}

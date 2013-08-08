@@ -17,9 +17,13 @@
 	<string name="menu_add">Add Filter</string>
 	<string name="title_add_filter">Add Filter</string>
 	<string name="desc_add_filter">Choose filter type and content</string>
-	<string name="filter_content_edit_hint">FIlter content</string>
+	<string name="filter_content_edit_hint">Filter content</string>
 	<string name="action_mode_title_filter">%d selected</string>
+	<string name="action_mode_title_sms">%d selected</string>
 	<string name="action_delete_filters">You are deleting %d filter(s).</string>
+	<string name="action_preclude_addr">Precluding address of %d message(s).</string>
+	<string name="action_delete_sms">Deleting %d message(s).</string>
+	<string name="msg_addr_precluded">%d filters created</string>
 
 	<string-array name="filter_type">
 		<item>Address starts with</item>
