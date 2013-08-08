@@ -7,15 +7,15 @@ import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.ActionMode;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.util.Log;
+import android.view.*;
 import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
 public class FilterListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>, AbsListView.MultiChoiceModeListener {
 
@@ -30,10 +30,32 @@ public class FilterListFragment extends ListFragment implements LoaderManager.Lo
 				getActivity(),
 				R.layout.filter_list_item,
 				null,
-				new String[]{DbVars.COL_FIL_RULE, DbVars.COL_FIL_TARGET, DbVars.COL_FIL_DESC},
-				new int[]{R.id.filter_rule, R.id.filter_type, R.id.filter_desc},
+				new String[]{DbVars.COL_FIL_RULE, DbVars.COL_FIL_STATE, DbVars.COL_FIL_DESC},
+				new int[]{R.id.filter_rule, R.id.filter_status, R.id.filter_desc},
 				0
 		);
+		mAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
+			@Override
+			public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+				switch (cursor.getColumnName(columnIndex)) {
+					case DbVars.COL_FIL_STATE:
+						TextView tv = (TextView) view;
+						switch (cursor.getString(columnIndex)) {
+							case DbVars.FilterState.STATE_PERMIT:
+								tv.setTextColor(Color.parseColor("#669900"));
+								tv.setText(R.string.filter_state_permit);
+								break;
+							case DbVars.FilterState.STATE_BLOCK:
+								tv.setTextColor(Color.parseColor("#CC0000"));
+								tv.setText(R.string.filter_state_block);
+								break;
+						}
+						return true;
+					default:
+						return false;
+				}
+			}
+		});
 		setListAdapter(mAdapter);
 		setListShown(false);
 		ListView lv = getListView();
@@ -55,7 +77,7 @@ public class FilterListFragment extends ListFragment implements LoaderManager.Lo
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
 		return new CursorLoader(getActivity(),
 				Uri.withAppendedPath(DatabaseProvider.CONTENT_URI, DbVars.TABLE_FILTER),
-				new String[]{DbVars.COL_ID, DbVars.COL_FIL_RULE, DbVars.COL_FIL_TARGET, DbVars.COL_FIL_DESC},
+				new String[]{DbVars.COL_ID, DbVars.COL_FIL_RULE, DbVars.COL_FIL_STATE, DbVars.COL_FIL_DESC},
 				null,
 				null,
 				DbVars.COL_ID +" ASC");

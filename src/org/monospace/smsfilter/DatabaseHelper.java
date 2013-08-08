@@ -56,7 +56,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		values.put(DbVars.COL_FIL_TARGET, DbVars.FilterType.TARGET_ADDR);
 		values.put(DbVars.COL_FIL_TYPE, DbVars.FilterType.TYPE_RAW);
 		values.put(DbVars.COL_FIL_RULE, "106%");
-		values.put(DbVars.COL_FIL_STATE, DbVars.FilterState.BLOCK.toString());
+		values.put(DbVars.COL_FIL_STATE, DbVars.FilterState.STATE_BLOCK);
 		values.put(DbVars.COL_FIL_DESC, "My favourite");
 		db.insert(DbVars.TABLE_FILTER, null, values);
 	}

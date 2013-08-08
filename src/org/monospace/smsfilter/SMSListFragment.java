@@ -8,15 +8,12 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.ActionMode;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.widget.AbsListView;
-import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
-import android.widget.Toast;
+import android.view.*;
+import android.widget.*;
 
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,15 +25,38 @@ public class SMSListFragment extends ListFragment implements LoaderManager.Loade
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-
 		mAdapter = new SimpleCursorAdapter(
 				getActivity(),
 				R.layout.sms_list_item,
 				null,
-				new String[]{DbVars.COL_SMS_SENDER, DbVars.COL_SMS_CONTENT},
-				new int[]{R.id.sms_sender, R.id.sms_content},
+				new String[]{DbVars.COL_SMS_SENDER, DbVars.COL_SMS_CONTENT, DbVars.COL_SMS_RECV_TIME},
+				new int[]{R.id.sms_sender, R.id.sms_content, R.id.sms_recv_time},
 				0
 		);
+		mAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
+			@Override
+			public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+				switch (cursor.getColumnName(columnIndex)) {
+					case DbVars.COL_SMS_RECV_TIME:
+						TextView tv = (TextView) view;
+						Date recv = new Date(cursor.getLong(columnIndex));
+						Calendar now = Calendar.getInstance();
+						Calendar recvCal = Calendar.getInstance();
+						recvCal.setTime(recv);
+						DateFormat format;
+						if (now.get(Calendar.YEAR) != recvCal.get(Calendar.YEAR) ||
+								now.get(Calendar.DAY_OF_YEAR) != recvCal.get(Calendar.DAY_OF_YEAR)) {
+							format = DateFormat.getDateInstance(DateFormat.SHORT);
+						} else {
+							format = DateFormat.getTimeInstance(DateFormat.SHORT);
+						}
+						tv.setText(format.format(recv));
+						return true;
+					default:
+						return false;
+				}
+			}
+		});
 		setListAdapter(mAdapter);
 		setListShown(false);
 		ListView lv = getListView();
@@ -57,7 +77,7 @@ public class SMSListFragment extends ListFragment implements LoaderManager.Loade
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
 		return new CursorLoader(getActivity(),
 				Uri.withAppendedPath(DatabaseProvider.CONTENT_URI, DbVars.TABLE_SMS),
-				new String[]{DbVars.COL_ID, DbVars.COL_SMS_SENDER, DbVars.COL_SMS_CONTENT},
+				new String[]{DbVars.COL_ID, DbVars.COL_SMS_SENDER, DbVars.COL_SMS_CONTENT, DbVars.COL_SMS_RECV_TIME},
 				null,
 				null,
 				DbVars.COL_SMS_RECV_TIME+" ASC");

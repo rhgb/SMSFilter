@@ -1,29 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<RelativeLayout
 		xmlns:android="http://schemas.android.com/apk/res/android"
 		android:orientation="vertical"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
+		android:padding="8dp"
         android:background="?android:attr/activatedBackgroundIndicator"
 		>
 
 	<TextView
-			android:id="@+id/filter_rule"
-			android:textSize="16sp"
-			android:textStyle="bold"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"/>
-
-	<TextView
-			android:id="@+id/filter_type"
-			android:textSize="16sp"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"/>
-
-	<TextView
 			android:id="@+id/filter_desc"
-			android:textSize="16sp"
+			android:textSize="18sp"
+			android:textColor="?android:textColorPrimary"
+			android:ellipsize="end"
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"/>
-</LinearLayout>
+			android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true"
+			android:layout_toRightOf="@+id/filter_status"/>
+
+	<TextView
+			android:id="@id/filter_status"
+			android:textSize="14sp"
+			android:textColor="?android:textColorSecondary"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentRight="true"
+			android:layout_centerVertical="true"
+			android:paddingLeft="8dp"/>
+
+	<TextView
+			android:id="@+id/filter_rule"
+			android:textSize="14sp"
+			android:textColor="?android:textColorSecondary"
+			android:ellipsize="end"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/filter_desc"
+			android:layout_alignParentLeft="true"
+			android:layout_toRightOf="@id/filter_status"/>
+</RelativeLayout>

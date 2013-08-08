@@ -52,7 +52,7 @@ public class SMSStateReceiver extends BroadcastReceiver {
 					new String[]{DbVars.COL_FIL_STATE},
 					blockSelection,
 					new String[]{
-							DbVars.FilterState.BLOCK.toString(),
+							DbVars.FilterState.STATE_BLOCK,
 							DbVars.FilterType.TARGET_ADDR,
 							sms.getOriginatingAddress(),
 							DbVars.FilterType.TARGET_CONTENT,

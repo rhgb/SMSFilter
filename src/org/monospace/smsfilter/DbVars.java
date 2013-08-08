@@ -76,8 +76,11 @@ public class DbVars {
 	}
 
 	public enum FilterState {
-		BLOCK(0, "block"),
-		PERMIT(1, "permit");
+		BLOCK(0, FilterState.STATE_BLOCK),
+		PERMIT(1, FilterState.STATE_PERMIT);
+
+		public static final String STATE_BLOCK = "block";
+		public static final String STATE_PERMIT = "permit";
 
 		private final int index;
 		private final String key;
