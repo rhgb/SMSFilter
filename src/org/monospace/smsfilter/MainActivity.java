@@ -8,86 +8,147 @@ import android.app.FragmentTransaction;
 import android.content.*;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+
 public class MainActivity extends Activity implements EditFilterDialogFragment.DialogListener {
 
-	private static class TabListener<T extends Fragment> implements ActionBar.TabListener {
-	    private Fragment mFragment;
-	    private final Activity mActivity;
-	    private final String mTag;
-	    private final Class<T> mClass;
+	private class TabHelper extends FragmentPagerAdapter implements ActionBar.TabListener, ViewPager.OnPageChangeListener {
 
-	    /** Constructor used each time a new tab is created.
-	      * @param activity  The host Activity, used to instantiate the fragment
-	      * @param tag  The identifier tag for the fragment
-	      * @param clz  The fragment's Class, used to instantiate the fragment
-	      */
-	    public TabListener(Activity activity, String tag, Class<T> clz, Fragment fragment) {
-	        mActivity = activity;
-	        mTag = tag;
-	        mClass = clz;
-			mFragment = fragment;
-	    }
-	    
-	    @Override
-	    public void onTabSelected(Tab tab, FragmentTransaction ft) {
-	        // Check if the fragment is already initialized
-	        if (mFragment == null) {
-	            // If not, instantiate and add it to the activity
-	            mFragment = Fragment.instantiate(mActivity, mClass.getName());
-	            ft.add(android.R.id.content, mFragment, mTag);
-	        } else {
-	            // If it exists, simply attach it in order to show it
-	            ft.attach(mFragment);
-	        }
-	    }
-	    @Override
-	    public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-	        if (mFragment != null) {
-	            // Detach the fragment, because another one is being attached
-	            ft.detach(mFragment);
-	        }
-	    }
-	    @Override
-	    public void onTabReselected(Tab tab, FragmentTransaction ft) {
-	        // User selected the already selected tab. Usually do nothing.
-	    }
+		private Activity mActivity;
+		private ViewPager mPager;
+
+		public TabHelper(Activity activity, ViewPager pager) {
+			super(activity.getFragmentManager());
+			mActivity = activity;
+			mPager = pager;
+		}
+
+		@Override
+		public Fragment getItem(int position) {
+			TabSet.Tab tab = mTabs.get(position);
+			Fragment fragment = Fragment.instantiate(mActivity, tab.itemClass.getName());
+			tab.setItem(fragment);
+			return fragment;
+		}
+
+		@Override
+		public int getCount() {
+			return NUM_TABS;
+		}
+
+		@Override
+		public void onTabSelected(Tab tab, FragmentTransaction ft) {
+			mPager.setCurrentItem(tab.getPosition());
+		}
+
+		@Override
+		public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+		}
+
+		@Override
+		public void onTabReselected(Tab tab, FragmentTransaction ft) {
+		}
+
+		@Override
+		public void onPageScrolled(int i, float v, int i2) {
+		}
+
+		@Override
+		public void onPageSelected(int i) {
+			mActivity.getActionBar().setSelectedNavigationItem(i);
+		}
+
+		@Override
+		public void onPageScrollStateChanged(int i) {
+		}
 	}
 
+	private class TabSet extends ArrayList<TabSet.Tab> {
+		public class Tab {
+			final public Class itemClass;
+			final public String tag;
+			final public int textId;
+			private Fragment item;
+
+			public Tab(String tag, int txt, Class clz) {
+				this.itemClass = clz;
+				this.tag = tag;
+				this.textId = txt;
+			}
+			@Override
+			public boolean equals(Object o) {
+				return Tab.class.isInstance(o) && ((Tab) o).tag.equals(this.tag);
+			}
+
+			public void setItem(Fragment item) {
+				this.item = item;
+			}
+		}
+
+		public TabSet(int capacity) {
+			super(capacity);
+		}
+
+		public void add(String tag, int txt, Class clz) {
+			Tab tab = new Tab(tag, txt, clz);
+			if (!this.contains(tab)) {
+				this.add(tab);
+			}
+		}
+
+		public Fragment getItem(String tag) {
+			for (Tab tab : this) {
+				if (tab.tag.equals(tag)) {
+					return tab.item;
+				}
+			}
+			return null;
+		}
+	}
+
+	private static final int NUM_TABS = 2;
 	private static final String TAB_SMS = "tab_sms_list";
 	private static final String TAB_FILTER = "tab_filter_list";
 	private BroadcastReceiver mReceiver;
+	private TabSet mTabs;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
+
+		mTabs = new TabSet(NUM_TABS);
+		mTabs.add(TAB_SMS, R.string.tab_sms_list, SMSListFragment.class);
+		mTabs.add(TAB_FILTER, R.string.tab_filter_list, FilterListFragment.class);
+
 		ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		actionBar.setDisplayShowTitleEnabled(false);
 
-		Fragment fragment = getFragmentManager().findFragmentByTag(TAB_SMS);
-		Tab tab = actionBar.newTab()
-				.setText(R.string.tab_sms_list)
-				.setTabListener(new TabListener<>(
-						this, TAB_SMS, SMSListFragment.class, fragment));
-		actionBar.addTab(tab);
+		ViewPager pager = new ViewPager(this);
+		pager.setId(R.id.main_pager);
 
-		fragment = getFragmentManager().findFragmentByTag(TAB_FILTER);
-		tab = actionBar.newTab()
-				.setText(R.string.tab_filter_list)
-				.setTabListener(new TabListener<>(
-						this, TAB_FILTER, FilterListFragment.class, fragment));
-		actionBar.addTab(tab);
-		if (fragment != null) {
-			tab.select();
+		TabHelper helper = new TabHelper(this, pager);
+		pager.setAdapter(helper);
+		pager.setOnPageChangeListener(helper);
+
+		for (TabSet.Tab t : mTabs) {
+			Tab tab = actionBar.newTab()
+					.setText(t.textId)
+					.setTabListener(helper);
+			actionBar.addTab(tab);
 		}
+
+		setContentView(pager);
 
 		mReceiver = new BroadcastReceiver() {
 			@Override
 			public void onReceive(Context context, Intent intent) {
-				SMSListFragment fragment = (SMSListFragment) getFragmentManager().findFragmentByTag(TAB_SMS);
+				SMSListFragment fragment = (SMSListFragment) mTabs.getItem(TAB_SMS);
 				fragment.refresh();
 			}
 		};
@@ -134,7 +195,7 @@ public class MainActivity extends Activity implements EditFilterDialogFragment.D
 		values.put(DbVars.COL_FIL_STATE, state.toString());
 		values.put(DbVars.COL_FIL_DESC, desc);
 		getContentResolver().insert(Uri.withAppendedPath(DatabaseProvider.CONTENT_URI, DbVars.TABLE_FILTER), values);
-		FilterListFragment fragment = (FilterListFragment) getFragmentManager().findFragmentByTag(TAB_FILTER);
+		FilterListFragment fragment = (FilterListFragment) mTabs.getItem(TAB_FILTER);
 		if (fragment != null) {
 			fragment.getLoaderManager().restartLoader(0, null, fragment);
 		}
