@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.*;
@@ -47,7 +46,6 @@ public class EditFilterDialogFragment extends DialogFragment implements AdapterV
 
 		@Override
 		public void onTextChanged(CharSequence s, int start, int before, int count) {
-			Log.i("EditDescListener", "desc changed");
 		}
 		@Override
 		public void afterTextChanged(Editable s) {}
@@ -67,7 +65,6 @@ public class EditFilterDialogFragment extends DialogFragment implements AdapterV
 		View customView = inflater.inflate(R.layout.dialog_edit_filter, null);
 
 		builder.setTitle(R.string.title_add_filter)
-				.setMessage(R.string.desc_add_filter)
 				.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
@@ -139,9 +136,13 @@ public class EditFilterDialogFragment extends DialogFragment implements AdapterV
 
 	public void inputChanged() {
 		if (!mDescEdited) {
+			String ruleContent = mEditRule.getText().toString();
+			if (ruleContent.isEmpty()) {
+				ruleContent = "…";
+			}
 			String desc = String.format(
 					getResources().getStringArray(R.array.filter_desc)[mFilterSpinner.getSelectedItemPosition()],
-					mEditRule.getText().toString());
+					ruleContent);
 			mEditDesc.setText(desc);
 		}
 	}

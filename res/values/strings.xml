@@ -33,8 +33,12 @@
 	<string name="filter_state_block">Block</string>
 	<string name="filter_desc_edit_hint">Filter description</string>
     <string name="msg_sms_blocked">Message blocked</string>
+	<string name="label_filter_type">Type</string>
+	<string name="label_filter_state">Method</string>
+	<string name="label_filter_content">Content</string>
+	<string name="label_desc_content">Description</string>
 
-    <string-array name="filter_type">
+	<string-array name="filter_type">
 		<item>Address starts with</item>
 		<item>Address contains</item>
 		<item>Address ends with</item>

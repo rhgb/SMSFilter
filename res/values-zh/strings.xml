@@ -33,8 +33,12 @@
 	<string name="filter_state_block">屏蔽</string>
 	<string name="filter_desc_edit_hint">对这条规则的描述</string>
     <string name="msg_sms_blocked">一条新短信已屏蔽</string>
+	<string name="label_filter_type">规则类型</string>
+	<string name="label_filter_state">操作</string>
+	<string name="label_filter_content">过滤内容</string>
+	<string name="label_desc_content">说明</string>
 
-    <string-array name="filter_type">
+	<string-array name="filter_type">
 		<item>短信号码开头</item>
 		<item>短信号码包含</item>
 		<item>短信号码结尾</item>
