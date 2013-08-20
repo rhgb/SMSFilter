@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-	private static final int DB_VERSION = 2;
+	private static final int DB_VERSION = 3;
 	private static final String DB_NAME = "main_db";
 
 	public DatabaseHelper(Context context) {
@@ -23,11 +23,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		if (oldVersion == 1) {
+		if (oldVersion < 2) {
 			db.execSQL("DROP TABLE "+ DbVars.TABLE_FILTER+";");
 			createFilterTable(db);
+			genInitData(db);
 		}
-		genInitData(db);
+		if (oldVersion < 3) {
+			//TODO alter table
+			db.execSQL("ALTER TABLE " + DbVars.TABLE_SMS +
+					" ADD " + DbVars.COL_SMS_PROTOCOL_ID + " INTEGER NULL");
+		}
 	}
 
 	private void createFilterTable(SQLiteDatabase db) {
@@ -44,6 +49,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	private void createSMSTable(SQLiteDatabase db) {
 		String create_sms = "CREATE TABLE "+ DbVars.TABLE_SMS +
 				" ("+ DbVars.COL_ID+" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+				DbVars.COL_SMS_PROTOCOL_ID + " INTEGER NULL, " +
 				DbVars.COL_SMS_SENDER + " TEXT NOT NULL, " +
 				DbVars.COL_SMS_CONTENT + " TEXT, " +
 				DbVars.COL_SMS_RECV_TIME + " NUMERIC NOT NULL, " +

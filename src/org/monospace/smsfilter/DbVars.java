@@ -12,11 +12,16 @@ public class DbVars {
 	public static final String COL_FIL_RULE = "rule";
 	public static final String COL_FIL_STATE = "state";
 	public static final String COL_FIL_DESC = "description";
+
 	public static final String TABLE_SMS = "sms";
 	public static final String COL_SMS_SENDER = "address";
 	public static final String COL_SMS_CONTENT = "message";
 	public static final String COL_SMS_RECV_TIME = "receive_time";
 	public static final String COL_SMS_STATE = "state";
+	public static final String COL_SMS_PROTOCOL_ID = "protocol_id";
+
+	public static final int SMS_STATE_UNREAD = 1;
+	public static final int SMS_STATE_READ = 0;
 
 	public enum FilterType {
 		ADDR_START_WITH(0, FilterType.TARGET_ADDR, FilterType.TYPE_START_WITH),

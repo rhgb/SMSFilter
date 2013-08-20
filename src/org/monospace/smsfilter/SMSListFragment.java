@@ -71,6 +71,7 @@ public class SMSListFragment extends ListFragment implements LoaderManager.Loade
 		if (pendingReload) {
 			reloadList();
 		}
+		markAllAsRead();
 	}
 
 	@Override
@@ -223,5 +224,14 @@ public class SMSListFragment extends ListFragment implements LoaderManager.Loade
 			);
 		}
 		return addrs.size();
+	}
+
+	public void markAllAsRead() {
+		ContentValues v = new ContentValues(1);
+		v.put(DbVars.COL_SMS_STATE, DbVars.SMS_STATE_READ);
+		getActivity().getContentResolver().update(Uri.withAppendedPath(DatabaseProvider.CONTENT_URI, DbVars.TABLE_SMS),
+				v,
+				DbVars.COL_SMS_STATE + " = ?",
+				new String[]{Integer.toString(DbVars.SMS_STATE_UNREAD)});
 	}
 }
