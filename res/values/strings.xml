@@ -37,6 +37,7 @@
 	<string name="label_filter_state">Method</string>
 	<string name="label_filter_content">Content</string>
 	<string name="label_desc_content">Description</string>
+	<string name="title_dialog_sms_detail">Messsage content</string>
 
 	<string-array name="filter_type">
 		<item>Address starts with</item>

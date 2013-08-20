@@ -62,6 +62,15 @@ public class SMSListFragment extends ListFragment implements LoaderManager.Loade
 		ListView lv = getListView();
 		lv.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
 		lv.setMultiChoiceModeListener(this);
+		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				TextView tv = (TextView) view.findViewById(R.id.sms_content);
+				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+				builder.setTitle(R.string.title_dialog_sms_detail)
+						.setMessage(tv.getText()).show();
+			}
+		});
 		getLoaderManager().initLoader(0, null, this);
 	}
 
